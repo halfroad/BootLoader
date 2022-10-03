@@ -1,28 +1,34 @@
-.data
+.DATA
 
-	msg:
+	message:
 	
-			.asciz			"Hello, world"
+			.ASCIZ			"Hello, world\n"
 			
 			
-.text
+.TEXT
 
-			.align			2
-			.globl			_start
+			.ALIGN			2
+			.GLOBAL			_start
 	
 _start:
 
-			LDR				r1,	=msg		/* address */
+			MOV				x0,	#1			//	Standard Output
 			
-			MOV				r0,	#1			/* stdout */
-			MOV				r2,	#13			/* length */
+			LDR				x1,	= message	//	Address of message to print
 			
-			SWI				#0x900004		/* sys_write */
+			MOV				x2,	#13			//	Length of string to print
+			MOV				x8, #64			//	Linux write system call
 			
-			MOV				r0,	#0
+			SVC				0				//	Software Interrupt call to print the string
 			
-			SWI				#0x900001		/* sys_exit */
+			// Setup the parameters to exit the program,
+			// and then call Linux to perform
 			
-			.align			2
+			MOV				x0,	#0			//	Return code 0
+			MOV				x8, #93			//	Service code 93 to terminate the program
+
+			SVC				0				//	Call Linux to terminate
+			
+			.ALIGN			2
 			
 	
