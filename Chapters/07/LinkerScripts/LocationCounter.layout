@@ -1,0 +1,14 @@
+SECTIONS
+{
+	output :
+	{
+		file1(.text)
+		. = . + 1000;
+		
+		file2(.text)
+		. = . + 1000;
+		
+		file3(.text)
+		
+	} = 0x12345678;
+}

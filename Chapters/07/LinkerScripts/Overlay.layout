@@ -1,0 +1,44 @@
+OVERLAY	0x1000 : AT (0x4000)
+	{
+		.text0
+			{
+				o1/*.o(.text)
+			}
+			
+		.text1
+			{
+				o2/*.o(.text)
+			}
+	
+	}
+	
+
+/*
+
+	__load_starttext0
+	__load_stop_text0
+	
+	__load_start_text1
+	__load_stop_text1
+	
+	OVERLAY directives just make the utlization more simple, and it can be implemented by complicated basic directives.
+	The above example can be rewritten by:
+*/
+
+.text0 0x1000 : AT (0x4000)
+{
+	o1/*.o (.text)
+}
+
+PROVIDE (__load_start_text0 = LOADADDR (.text0));
+PROVIDE (__load_stop_text0 = LOADADDR (.text0));
+
+.text1 0x1000 : AT (0x4000 + SIZEOF(.text0))
+{
+	o2/*.o (.text)
+}
+
+PROVIDE (__load_start_text1 = LOADADDR (.text1));
+PROVIDE (__load_stop_text1 = LOADADDR (.text1));
+
+. = 0x1000 + MAX (SIZEOF (.text10), SIZEOF (.text1));
